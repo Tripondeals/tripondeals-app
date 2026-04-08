@@ -4,25 +4,11 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { from, to, date, adults = 1, children = 0, cabinClass = 'economy', debug } = req.query;
-
-  // DEBUG MODE - show raw autocomplete response
-  if (debug) {
-    try {
-      const r = await fetch(`https://flights-sky.p.rapidapi.com/flights/auto-complete?query=${encodeURIComponent(from || 'SEA')}`, {
-        headers: { 'x-rapidapi-key': RAPIDAPI_KEY, 'x-rapidapi-host': 'flights-sky.p.rapidapi.com' }
-      });
-      const d = await r.json();
-      return res.status(200).json({ rawAutocomplete: d });
-    } catch(e) {
-      return res.status(500).json({ error: e.message });
-    }
-  }
-
+  const { from, to, date, adults = 1, children = 0, cabinClass = 'economy' } = req.query;
   if (!from || !to || !date) return res.status(400).json({ error: 'from, to and date required' });
 
   try {
-    // Get entity IDs from autocomplete
+    // Step 1: Get correct entity IDs via autocomplete for both airports
     const [oRes, dRes] = await Promise.all([
       fetch(`https://flights-sky.p.rapidapi.com/flights/auto-complete?query=${encodeURIComponent(from)}`, {
         headers: { 'x-rapidapi-key': RAPIDAPI_KEY, 'x-rapidapi-host': 'flights-sky.p.rapidapi.com' }
@@ -34,24 +20,22 @@ module.exports = async (req, res) => {
 
     const [oData, dData] = await Promise.all([oRes.json(), dRes.json()]);
 
-    const oItem = (oData.data || [])[0];
-    const dItem = (dData.data || [])[0];
+    // Pick the AIRPORT type result (not CITY) for accuracy
+    const oItem = (oData.data || []).find(i => i.navigation?.entityType === 'AIRPORT') || (oData.data || [])[0];
+    const dItem = (dData.data || []).find(i => i.navigation?.entityType === 'AIRPORT') || (dData.data || [])[0];
 
     if (!oItem || !dItem) {
-      return res.status(200).json({
-        itineraries: [], count: 0,
-        message: 'Airport lookup failed',
-        fromResult: oData,
-        toResult: dData
-      });
+      return res.status(200).json({ itineraries: [], count: 0, message: 'Airport not found for: ' + from + ' or ' + to });
     }
 
-    const fromEntityId = oItem.entityId;
-    const toEntityId = dItem.entityId;
-    const fromSkyId = oItem.skyId;
-    const toSkyId = dItem.skyId;
+    const fromEntityId = oItem.navigation.entityId;
+    const toEntityId = dItem.navigation.entityId;
+    const fromSkyId = oItem.navigation.relevantFlightParams.skyId;
+    const toSkyId = dItem.navigation.relevantFlightParams.skyId;
+    const fromCity = oItem.navigation.localizedName;
+    const toCity = dItem.navigation.localizedName;
 
-    // Search flights
+    // Step 2: Search flights with correct IDs
     const searchUrl = `https://flights-sky.p.rapidapi.com/flights/search-one-way?fromEntityId=${fromEntityId}&toEntityId=${toEntityId}&departDate=${date}&adults=${adults}&children=${children}&cabinClass=${cabinClass}`;
 
     const sRes = await fetch(searchUrl, {
@@ -62,15 +46,8 @@ module.exports = async (req, res) => {
     if (!sData?.data?.itineraries?.length) {
       return res.status(200).json({
         itineraries: [], count: 0,
-        message: 'No flights found',
-        debug: {
-          fromEntityId, toEntityId, fromSkyId, toSkyId,
-          fromCity: oItem.presentation?.title,
-          toCity: dItem.presentation?.title,
-          apiStatus: sData?.status,
-          apiMessage: sData?.message,
-          searchUrl
-        }
+        message: 'No flights found for this route and date',
+        debug: { fromEntityId, toEntityId, fromSkyId, toSkyId, apiStatus: sData?.status, apiMsg: sData?.message }
       });
     }
 
@@ -80,12 +57,12 @@ module.exports = async (req, res) => {
         id: it.id,
         price: Math.round(it.price?.raw || 0),
         priceFormatted: it.price?.formatted || '$' + Math.round(it.price?.raw || 0),
-        airline: leg?.carriers?.marketing?.[0]?.name || 'Unknown',
+        airline: leg?.carriers?.marketing?.[0]?.name || 'Unknown Airline',
         airlineCode: leg?.carriers?.marketing?.[0]?.alternateId || '??',
         from: leg?.origin?.displayCode || fromSkyId,
         to: leg?.destination?.displayCode || toSkyId,
-        fromCity: leg?.origin?.city || from,
-        toCity: leg?.destination?.city || to,
+        fromCity: leg?.origin?.city || fromCity,
+        toCity: leg?.destination?.city || toCity,
         dep: (leg?.departure || '').slice(11, 16),
         arr: (leg?.arrival || '').slice(11, 16),
         depDate: (leg?.departure || date).slice(0, 10),
@@ -97,7 +74,7 @@ module.exports = async (req, res) => {
       };
     });
 
-    return res.status(200).json({ itineraries, count: itineraries.length });
+    return res.status(200).json({ itineraries, count: itineraries.length, from: fromCity, to: toCity });
 
   } catch (err) {
     return res.status(500).json({ error: err.message });
