@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TripOnDeals — World's Best Travel Deals</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--ink:#0d0d0d;--ink2:#1a1a2e;--cream:#fafaf8;--warm:#f4f3ef;--teal:#00c896;--teal2:#00a87e;--teal3:#e6fdf6;--gold:#d4a843;--gold2:#f0c060;--muted:#64748b;--border:#e2e8f0;--shadow:0 2px 16px rgba(0,0,0,0.07);--shadow2:0 8px 40px rgba(0,0,0,0.12);}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden;}
+.page{display:none;}.page.active{display:block;}
+button{font-family:'Outfit',sans-serif;cursor:pointer;}
+input,select{font-family:'Outfit',sans-serif;}
+
+.nav{position:sticky;top:0;z-index:999;background:rgba(13,13,13,0.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.07);padding:0 40px;display:flex;align-items:center;gap:16px;height:64px;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:#fff;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;margin-right:8px;}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);}
+.nav-links{display:flex;gap:2px;flex:1;}
+.nl{color:rgba(255,255,255,0.6);font-size:13px;padding:6px 12px;border-radius:7px;background:none;border:none;transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.nl:hover{color:#fff;background:rgba(255,255,255,0.08);}
+.nl.partner{color:var(--gold2);border:1px solid rgba(212,168,67,0.25);background:rgba(212,168,67,0.07);}
+.ndot{width:5px;height:5px;border-radius:50%;background:var(--gold2);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.nav-signin{color:rgba(255,255,255,0.65);font-size:13px;background:none;border:1px solid rgba(255,255,255,0.15);padding:7px 16px;border-radius:8px;}
+.nav-cta{background:var(--teal);color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:500;}
+.nav-back{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:7px 14px;border-radius:8px;font-size:13px;display:none;}
+
+.hero{background:var(--ink2);min-height:560px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:72px 40px 0;text-align:center;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 100% 80% at 20% 50%,rgba(0,200,150,0.11) 0%,transparent 55%),radial-gradient(ellipse 70% 50% at 80% 30%,rgba(59,130,246,0.08) 0%,transparent 55%);pointer-events:none;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(0,200,150,0.1);border:1px solid rgba(0,200,150,0.22);color:var(--teal);font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:24px;position:relative;z-index:1;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,6.5vw,82px);font-weight:700;color:#fff;line-height:1.02;letter-spacing:-2px;margin-bottom:20px;max-width:860px;position:relative;z-index:1;}
+.hero h1 em{color:var(--teal);font-style:italic;}
+.hero h1 span{color:var(--gold2);}
+.hero-sub{font-size:16px;color:rgba(255,255,255,0.5);max-width:500px;margin:0 auto 48px;line-height:1.7;font-weight:300;position:relative;z-index:1;}
+
+.se{background:#fff;border-radius:20px 20px 0 0;padding:28px 32px 0;max-width:1000px;width:100%;box-shadow:0 -16px 60px rgba(0,0,0,0.35);position:relative;z-index:2;}
+.se-tabs{display:flex;gap:2px;margin-bottom:20px;background:var(--warm);border-radius:12px;padding:4px;}
+.se-tab{flex:1;padding:9px 12px;border-radius:9px;border:none;font-size:12px;font-weight:500;background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;transition:all .2s;}
+.se-tab svg{width:13px;height:13px;flex-shrink:0;}
+.se-tab.active{background:#fff;color:var(--ink);box-shadow:0 1px 6px rgba(0,0,0,0.1);}
+.se-tab.gold{color:var(--gold)!important;}
+.se-tab.gold.active{color:var(--ink)!important;}
+
+.flight-opts{display:flex;align-items:center;gap:16px;margin-bottom:14px;}
+.radio-group{display:flex;gap:12px;}
+.radio-opt{display:flex;align-items:center;gap:6px;}
+.radio-opt input[type=radio]{accent-color:var(--teal);width:14px;height:14px;}
+.radio-opt label{font-size:13px;color:var(--muted);cursor:pointer;}
+.radio-opt input:checked+label{color:var(--ink);font-weight:500;}
+.class-sel{border:1.5px solid var(--border);border-radius:8px;padding:7px 12px;font-size:12px;color:var(--ink);background:var(--warm);outline:none;appearance:none;}
+
+.autocomplete-wrap{position:relative;}
+.autocomplete-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow2);z-index:200;max-height:220px;overflow-y:auto;display:none;}
+.autocomplete-list.open{display:block;}
+.ac-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(0,0,0,0.05);transition:background .1s;}
+.ac-item:last-child{border-bottom:none;}
+.ac-item:hover{background:var(--teal3);}
+.ac-name{font-size:13px;font-weight:500;color:var(--ink);}
+.ac-sub{font-size:11px;color:var(--muted);}
+
+.pax-wrap{position:relative;}
+.pax-btn{border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:14px;color:var(--ink);background:var(--warm);outline:none;width:100%;text-align:left;display:flex;align-items:center;gap:6px;}
+.pax-btn svg{width:14px;height:14px;color:var(--muted);}
+.pax-btn.open{border-color:var(--teal);background:#fff;}
+.pax-drop{position:absolute;top:calc(100% + 6px);left:0;min-width:280px;background:#fff;border:1.5px solid var(--border);border-radius:14px;box-shadow:var(--shadow2);z-index:100;padding:16px;display:none;}
+.pax-drop.open{display:block;}
+.pax-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.pax-row:last-of-type{border-bottom:none;}
+.pax-label{font-size:14px;font-weight:500;color:var(--ink);}
+.pax-sub{font-size:11px;color:var(--muted);}
+.pax-ctrl{display:flex;align-items:center;gap:10px;}
+.pax-btn2{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--ink);}
+.pax-btn2:hover{border-color:var(--teal);color:var(--teal);}
+.pax-btn2:disabled{opacity:.3;cursor:not-allowed;}
+.pax-count{width:24px;text-align:center;font-size:15px;font-weight:500;}
+.pax-done{width:100%;background:var(--teal);color:#fff;border:none;border-radius:9px;padding:10px;font-size:13px;font-weight:500;margin-top:12px;}
+
+.sf-row{display:grid;gap:10px;padding-bottom:28px;align-items:end;}
+.sf-row.fl{grid-template-columns:1fr 1fr 140px 140px 160px auto;}
+.sf-row.ho{grid-template-columns:1.5fr 130px 130px 160px auto;}
+.sf-row.pk{grid-template-columns:1fr 1fr 130px 130px auto;}
+.sf-row.ca{grid-template-columns:1fr 130px 130px 110px auto;}
+.sf-row.tp{grid-template-columns:1fr 130px 130px auto;}
+.sf{display:flex;flex-direction:column;gap:5px;}
+.sf label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.9px;text-transform:uppercase;}
+.sf input,.sf select{border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:14px;color:var(--ink);background:var(--warm);outline:none;transition:all .15s;appearance:none;-webkit-appearance:none;}
+.sf input:focus,.sf select:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(0,200,150,0.1);}
+.sf input::placeholder{color:#aaa;}
+
+.sbtn{background:var(--ink2);color:#fff;border:none;border-radius:10px;padding:0 22px;font-size:14px;font-weight:500;white-space:nowrap;height:50px;align-self:end;transition:all .2s;display:flex;align-items:center;gap:7px;}
+.sbtn:hover{background:var(--ink);}
+.sbtn svg{width:16px;height:16px;}
+.sbtn.teal-btn{background:var(--teal);}
+.sbtn.teal-btn:hover{background:var(--teal2);}
+.sbtn:disabled{background:#9ca3af;cursor:not-allowed;}
+
+.trust-bar{background:var(--ink2);border-top:1px solid rgba(255,255,255,0.05);padding:16px 40px;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;}
+.ti{display:flex;align-items:center;gap:8px;}
+.ti svg{width:14px;height:14px;color:var(--teal);flex-shrink:0;}
+.ti span{font-size:12px;color:rgba(255,255,255,0.5);}
+.ti span strong{color:rgba(255,255,255,0.85);font-weight:500;}
+
+.rpage{background:var(--warm);min-height:90vh;}
+.rcontainer{max-width:1260px;margin:0 auto;padding:28px 40px;}
+.rtop{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;gap:16px;flex-wrap:wrap;}
+.rheading{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--ink);}
+.rsub{font-size:12px;color:var(--muted);margin-top:3px;}
+.sort-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.sort-pill{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;color:var(--muted);font-weight:500;transition:all .15s;}
+.sort-pill.active{border-color:var(--teal);color:var(--teal);background:rgba(0,200,150,0.06);}
+.rlayout{display:grid;grid-template-columns:260px 1fr;gap:20px;}
+.fpanel{background:#fff;border-radius:18px;border:1px solid var(--border);padding:20px;height:fit-content;box-shadow:var(--shadow);}
+.fp-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.fp-clear{font-size:11px;color:var(--teal);cursor:pointer;font-weight:500;background:none;border:none;}
+.fp-sec{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.fp-sec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.fp-sec-title{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;}
+.fo{display:flex;align-items:center;gap:7px;margin-bottom:7px;}
+.fo input[type=checkbox]{accent-color:var(--teal);width:14px;height:14px;}
+.fo label{font-size:13px;color:var(--muted);}
+.ps{width:100%;accent-color:var(--teal);}
+.prange{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px;}
+.star-row{display:flex;gap:6px;flex-wrap:wrap;}
+.star-btn{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;color:var(--muted);transition:all .15s;}
+.star-btn.active{border-color:var(--gold);color:var(--gold);background:#fdf8ec;}
+.amen-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.amen-check{display:flex;align-items:center;gap:6px;}
+.amen-check input{accent-color:var(--teal);width:13px;height:13px;}
+.amen-check label{font-size:12px;color:var(--muted);}
+.rcards{display:flex;flex-direction:column;gap:14px;}
+
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px;}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;color:var(--muted);}
+.error-box{background:#fff1f2;border:1px solid #fecdd3;border-radius:12px;padding:20px;text-align:center;color:#9f1239;font-size:14px;}
+.no-results{background:#fff;border-radius:12px;padding:40px;text-align:center;color:var(--muted);font-size:14px;border:1px solid var(--border);}
+
+.frc{background:#fff;border-radius:16px;border:1.5px solid var(--border);padding:20px 24px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow);}
+.frc:hover{border-color:var(--teal);box-shadow:0 8px 30px rgba(0,200,150,0.1);transform:translateY(-2px);}
+.frc-top{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.al-badge{width:42px;height:42px;border-radius:11px;background:var(--warm);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ink);flex-shrink:0;border:1px solid var(--border);}
+.al-name{font-size:12px;color:var(--muted);min-width:100px;}
+.frt{flex:1;display:flex;align-items:center;gap:10px;}
+.rt-time .t{font-size:20px;font-weight:600;color:var(--ink);}
+.rt-time .ap{font-size:11px;color:var(--muted);}
+.rt-track{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.rt-track .dur{font-size:11px;color:var(--muted);}
+.rt-line{width:100%;height:1px;background:var(--border);position:relative;}
+.rt-line::before{content:'';position:absolute;left:0;top:-3px;width:7px;height:7px;border-radius:50%;background:var(--teal);}
+.rt-line::after{content:'';position:absolute;right:0;top:-3px;width:7px;height:7px;border-radius:50%;background:var(--ink2);}
+.rt-track .stp{font-size:11px;color:var(--muted);}
+.frc-price{text-align:right;flex-shrink:0;min-width:120px;}
+.frc-price .pr{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--ink);}
+.frc-price .per{font-size:11px;color:var(--muted);}
+.frc-price .bk{margin-top:7px;background:var(--teal);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-size:12px;font-weight:500;transition:background .15s;display:block;width:100%;text-align:center;}
+.frc-price .bk:hover{background:var(--teal2);}
+.frc-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.ftag{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500;}
+.ftag.g{background:#ecfdf5;color:#065f46;}
+.ftag.b{background:#eff6ff;color:#1e40af;}
+.ftag.a{background:#fffbeb;color:#92400e;}
+
+.hrc{background:#fff;border-radius:16px;border:1.5px solid var(--border);overflow:hidden;cursor:pointer;transition:all .2s;display:flex;box-shadow:var(--shadow);}
+.hrc:hover{border-color:var(--teal);box-shadow:0 8px 30px rgba(0,200,150,0.1);transform:translateY(-2px);}
+.hrc-img{width:200px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#062e1a,#0f9e75);position:relative;overflow:hidden;}
+.hrc-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.hrc-img svg{width:48px;height:48px;opacity:.35;position:relative;z-index:1;}
+.hrc-body{flex:1;padding:18px 20px;}
+.hrc-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.hrc-loc{font-size:12px;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:3px;}
+.hrc-stars{color:var(--gold);font-size:12px;letter-spacing:1px;margin-bottom:8px;}
+.hrc-footer{display:flex;align-items:flex-end;justify-content:space-between;margin-top:10px;}
+.hrc-pr .pr{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--ink);}
+.hrc-per{font-size:11px;color:var(--muted);}
+.score-badge{background:var(--ink2);color:#fff;font-size:12px;font-weight:600;padding:3px 9px;border-radius:7px;display:inline-block;margin-right:6px;}
+
+.dpage{background:var(--warm);min-height:90vh;}
+.dcontainer{max-width:1200px;margin:0 auto;padding:28px 40px;}
+.dgrid{display:grid;grid-template-columns:1fr 340px;gap:22px;}
+.dmain{background:#fff;border-radius:18px;border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow);}
+.dhero{height:230px;display:flex;align-items:center;justify-content:center;position:relative;}
+.dhero.fh{background:linear-gradient(145deg,var(--ink2),#0a3060);}
+.dhero.hh{background:linear-gradient(145deg,#062e1a,#0f9e75);}
+.dhero.ph{background:linear-gradient(145deg,#1a0a3e,#4a2d9a);}
+.dhero img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.dhero svg{width:56px;height:56px;opacity:.5;position:relative;z-index:1;}
+.dhero-badge{position:absolute;top:14px;right:14px;background:rgba(0,200,150,0.85);color:#fff;font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;z-index:2;}
+.dbody{padding:28px;}
+.dname{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.dsub{font-size:13px;color:var(--muted);margin-bottom:22px;}
+.dsec{margin-bottom:22px;}
+.dsec-title{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.drow{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:13px;}
+.drow .dl{color:var(--muted);}
+.drow .dv{font-weight:500;color:var(--ink);}
+.dam-grid{display:flex;flex-wrap:wrap;gap:7px;}
+.dam{font-size:12px;color:var(--muted);background:var(--warm);padding:5px 12px;border-radius:8px;border:1px solid var(--border);}
+.dsidebar{display:flex;flex-direction:column;gap:14px;}
+.pw{background:#fff;border-radius:18px;border:1px solid var(--border);padding:22px;box-shadow:var(--shadow);}
+.pw-price{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;color:var(--ink);line-height:1;}
+.pw-note{font-size:11px;color:var(--muted);margin-top:3px;margin-bottom:18px;}
+.pw-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;}
+.pw-row .pl{color:var(--muted);}
+.pw-row.tot{border-top:1.5px solid var(--border);padding-top:10px;margin-top:4px;font-weight:600;font-size:14px;}
+.pw-btn{width:100%;background:var(--ink2);color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:500;transition:all .2s;margin-top:14px;}
+.pw-btn:hover{background:var(--ink);}
+.pw-trust{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+.pw-ti{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
+.pw-ti svg{width:13px;height:13px;color:var(--teal);flex-shrink:0;}
+
+.copage{background:var(--warm);min-height:90vh;}
+.cocontainer{max-width:980px;margin:0 auto;padding:28px 40px;}
+.costeps{display:flex;background:#fff;border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:22px;box-shadow:var(--shadow);}
+.costep{flex:1;padding:13px;text-align:center;font-size:12px;color:var(--muted);border-right:1px solid var(--border);}
+.costep:last-child{border-right:none;}
+.costep.active{background:rgba(0,200,150,0.06);color:var(--teal2);font-weight:500;}
+.costep.done{background:#ecfdf5;color:#065f46;}
+.cosn{display:block;font-size:9px;font-weight:600;margin-bottom:2px;letter-spacing:.5px;text-transform:uppercase;}
+.cogrid{display:grid;grid-template-columns:1fr 290px;gap:18px;}
+.coml{display:flex;flex-direction:column;gap:14px;}
+.cocard{background:#fff;border-radius:16px;border:1px solid var(--border);padding:22px;box-shadow:var(--shadow);}
+.cotitle{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.cotitle svg{width:15px;height:15px;color:var(--teal);}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.ff{display:flex;flex-direction:column;gap:4px;}
+.ff label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;}
+.ff input,.ff select{border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--ink);background:var(--warm);outline:none;transition:all .15s;}
+.ff input:focus,.ff select:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(0,200,150,0.1);}
+.ff.full{grid-column:1/-1;}
+.clogos{display:flex;gap:6px;margin-bottom:10px;}
+.clogo{height:22px;padding:0 8px;border:1px solid var(--border);border-radius:5px;background:#fff;display:flex;align-items:center;font-size:9px;font-weight:700;}
+.cobtn{width:100%;background:var(--teal);color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:500;transition:all .2s;margin-top:8px;}
+.cobtn:hover{background:var(--teal2);}
+.obox{background:#fff;border-radius:16px;border:1px solid var(--border);padding:18px;height:fit-content;box-shadow:var(--shadow);}
+.ot{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:12px;}
+.oi{background:var(--warm);border-radius:10px;padding:11px;margin-bottom:10px;border:1px solid var(--border);}
+.oi-name{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:2px;}
+.oi-det{font-size:11px;color:var(--muted);}
+.orows{margin-top:10px;}
+.or{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.04);}
+.or .ol{color:var(--muted);}
+.or.tot{border-top:2px solid var(--border);border-bottom:none;padding-top:9px;margin-top:3px;font-weight:600;font-size:14px;}
+.sec-note{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.sec-note svg{width:11px;height:11px;color:var(--teal);}
+
+.cfpage{background:var(--warm);min-height:90vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+.cfcard{background:#fff;border-radius:24px;border:1px solid var(--border);padding:48px 44px;max-width:560px;width:100%;text-align:center;box-shadow:0 20px 80px rgba(0,0,0,0.1);}
+.cf-icon{width:76px;height:76px;border-radius:50%;background:#ecfdf5;border:2px solid rgba(0,200,150,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;}
+.cf-icon svg{width:38px;height:38px;}
+.cf-title{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.cf-sub{font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.65;font-weight:300;}
+.ref-box{background:var(--warm);border-radius:14px;border:2px dashed rgba(0,200,150,0.4);padding:18px;margin-bottom:22px;}
+.ref-label{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
+.ref-code{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:var(--ink);letter-spacing:6px;}
+.cf-details{background:var(--warm);border-radius:12px;border:1px solid var(--border);padding:16px;margin-bottom:24px;text-align:left;}
+.cdr{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid rgba(0,0,0,0.05);}
+.cdr:last-child{border-bottom:none;}
+.cdr .cl{color:var(--muted);}
+.cdr .cv{font-weight:500;color:var(--ink);}
+.cf-actions{display:flex;gap:10px;justify-content:center;}
+.btn-dark{background:var(--ink2);color:#fff;border:none;border-radius:12px;padding:12px 26px;font-size:13px;font-weight:500;}
+.btn-outline{background:#fff;color:var(--ink);border:1.5px solid var(--border);border-radius:12px;padding:12px 26px;font-size:13px;font-weight:500;}
+.cf-enote{font-size:12px;color:var(--muted);margin-top:18px;}
+
+.dest-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:220px 220px;gap:14px;}
+.dc{border-radius:18px;overflow:hidden;cursor:pointer;position:relative;transition:transform .3s;}
+.dc:hover{transform:translateY(-5px);}
+.dc:nth-child(1){grid-column:span 5;grid-row:span 2;}
+.dc:nth-child(2){grid-column:span 4;}
+.dc:nth-child(3){grid-column:span 3;}
+.dc:nth-child(4){grid-column:span 3;}
+.dc:nth-child(5){grid-column:span 4;}
+.dc-bg{position:absolute;inset:0;}
+.dc-bg.bali{background:linear-gradient(145deg,#062e1a,#0f6040,#1db874);}
+.dc-bg.paris{background:linear-gradient(145deg,#100830,#2d1060,#6020b0);}
+.dc-bg.dubai{background:linear-gradient(145deg,#2d1500,#7a3a00,#d4831a);}
+.dc-bg.tokyo{background:linear-gradient(145deg,#1a0020,#500060,#c040c0);}
+.dc-bg.ny{background:linear-gradient(145deg,#000818,#001840,#0040a0);}
+.dc-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.05) 60%,transparent 100%);}
+.dc-content{position:absolute;bottom:0;left:0;right:0;padding:20px;}
+.dc-city{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:2px;}
+.dc:nth-child(1) .dc-city{font-size:32px;}
+.dc-country{font-size:11px;color:rgba(255,255,255,0.65);margin-bottom:10px;}
+.dc-footer{display:flex;align-items:center;justify-content:space-between;}
+.dc-price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:#fff;}
+.dc-price small{font-size:11px;font-weight:400;font-family:'Outfit',sans-serif;opacity:.7;}
+.dc-save{background:rgba(0,200,150,0.85);color:#fff;font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;}
+
+.sec{padding:72px 40px;max-width:1200px;margin:0 auto;}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:8px;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--ink);letter-spacing:-1px;margin-bottom:40px;line-height:1.1;}
+.sec-title em{color:var(--teal);font-style:italic;}
+
+.tpsec{background:var(--ink2);padding:88px 40px;position:relative;overflow:hidden;}
+.tpsec::before{content:'';position:absolute;top:-120px;right:-120px;width:550px;height:550px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,0.09) 0%,transparent 70%);pointer-events:none;}
+.tpinner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
+.tp-ey{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);margin-bottom:10px;}
+.tp-t{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,4vw,50px);font-weight:700;color:#fff;letter-spacing:-1px;margin-bottom:18px;line-height:1.05;}
+.tp-t em{color:var(--gold2);font-style:italic;}
+.tp-d{font-size:15px;color:rgba(255,255,255,0.5);line-height:1.8;font-weight:300;margin-bottom:28px;}
+.tp-feats{display:flex;flex-direction:column;gap:14px;margin-bottom:32px;}
+.tp-feat{display:flex;align-items:flex-start;gap:11px;}
+.tp-fi{width:34px;height:34px;border-radius:9px;background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tp-fi svg{width:15px;height:15px;}
+.tp-ft strong{display:block;color:#fff;font-weight:500;margin-bottom:1px;font-size:14px;}
+.tp-ft span{font-size:12px;color:rgba(255,255,255,0.45);line-height:1.5;}
+.tp-acts{display:flex;gap:10px;}
+.btn-gold{background:var(--gold);color:var(--ink);border:none;padding:12px 26px;border-radius:12px;font-size:14px;font-weight:600;}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.18);padding:12px 22px;border-radius:12px;font-size:13px;}
+.mw{position:relative;}
+.mfloat{position:absolute;top:-15px;right:16px;background:var(--gold);color:var(--ink);font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;z-index:1;}
+.mcard{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:22px;}
+.mhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.mttl{font-size:12px;font-weight:500;color:rgba(255,255,255,0.45);}
+.mlive{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--teal);}
+.mld{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite;}
+.mdest{margin-bottom:14px;}
+.mpill{background:rgba(212,168,67,0.13);border:1px solid rgba(212,168,67,0.22);color:var(--gold2);font-size:12px;font-weight:500;padding:5px 12px;border-radius:20px;}
+.mdates{font-size:11px;color:rgba(255,255,255,0.3);margin-left:7px;}
+.mlist{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.mi{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 12px;cursor:pointer;}
+.mav{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0;}
+.av1{background:linear-gradient(135deg,#0f9e75,#085041);}
+.av2{background:linear-gradient(135deg,#d85a30,#993c1d);}
+.av3{background:linear-gradient(135deg,#534ab7,#26215c);}
+.mname{font-size:12px;font-weight:500;color:#fff;margin-bottom:1px;}
+.mmeta{font-size:10px;color:rgba(255,255,255,0.35);}
+.mbar{height:2px;background:rgba(255,255,255,0.07);border-radius:2px;margin-top:4px;overflow:hidden;}
+.mbf{height:100%;background:var(--teal);border-radius:2px;}
+.mpct{font-size:14px;font-weight:600;color:var(--teal);}
+.mpctl{font-size:9px;color:rgba(255,255,255,0.25);}
+.macts{display:flex;gap:7px;}
+.mbp{flex:1;background:var(--gold);color:var(--ink);border:none;padding:9px;border-radius:9px;font-size:12px;font-weight:600;}
+.mbs{flex:1;background:rgba(255,255,255,.07);color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.09);padding:9px;border-radius:9px;font-size:12px;}
+
+.featsec{background:#fff;padding:88px 40px;}
+.featinner{max-width:1200px;margin:0 auto;}
+.featgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.fcard{padding:26px 22px;border-radius:16px;background:var(--warm);border:1px solid var(--border);transition:all .2s;}
+.fcard:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+.fi{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+.fi svg{width:22px;height:22px;}
+.ft{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:7px;}
+.fd{font-size:13px;color:var(--muted);line-height:1.65;}
+.fcard.dark{background:var(--ink2);border-color:transparent;}
+.fcard.dark .ft{color:#fff;}
+.fcard.dark .fd{color:rgba(255,255,255,.45);}
+
+.ctasec{background:var(--ink2);padding:88px 40px;text-align:center;position:relative;overflow:hidden;}
+.ctasec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(0,200,150,0.08) 0%,transparent 70%);}
+.cta-title{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,5vw,62px);font-weight:700;color:#fff;letter-spacing:-1.5px;margin-bottom:12px;position:relative;z-index:1;}
+.cta-title em{color:var(--teal);font-style:italic;}
+.cta-sub{font-size:16px;color:rgba(255,255,255,.45);margin-bottom:32px;font-weight:300;position:relative;z-index:1;}
+.cta-btns{display:flex;gap:12px;justify-content:center;position:relative;z-index:1;}
+.btn-teal{background:var(--teal);color:#fff;border:none;padding:14px 32px;border-radius:12px;font-size:14px;font-weight:500;}
+.btn-ow{background:transparent;color:rgba(255,255,255,.7);border:1.5px solid rgba(255,255,255,.2);padding:14px 28px;border-radius:12px;font-size:14px;}
+
+.footer{background:#060606;padding:52px 40px 28px;}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:36px;}
+.fbrand .logo{display:inline-flex;margin-bottom:7px;}
+.ftagline{font-size:12px;color:rgba(255,255,255,.3);margin-bottom:12px;}
+.femail{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.35);text-decoration:none;}
+.fcols{display:flex;gap:48px;}
+.fcol h5{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:12px;}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.fcol a{font-size:12px;color:rgba(255,255,255,.35);cursor:pointer;transition:color .2s;}
+.fcol a:hover{color:#fff;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.05);padding-top:20px;display:flex;justify-content:space-between;}
+.fcopy{font-size:11px;color:rgba(255,255,255,.18);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo" onclick="goHome()"><span class="logo-dot"></span>TripOnDeals</div>
+  <div class="nav-links" id="main-nav">
+    <button class="nl" onclick="switchTab('flights');goHome()">Flights</button>
+    <button class="nl" onclick="switchTab('hotels');goHome()">Hotels</button>
+    <button class="nl" onclick="switchTab('packages');goHome()">Packages</button>
+    <button class="nl" onclick="switchTab('cars');goHome()">Cars</button>
+    <button class="nl partner" onclick="switchTab('tp');goHome()"><span class="ndot"></span>Travel Partner</button>
+  </div>
+  <button class="nav-back" id="nav-back" onclick="goBack()">← Back</button>
+  <div class="nav-right">
+    <button class="nav-signin">Sign in</button>
+    <button class="nav-cta" onclick="doSearch()">Search deals</button>
+  </div>
+</nav>
+
+<!-- LANDING -->
+<div class="page active" id="p-land">
+  <div class="hero">
+    <div class="hero-bg"></div><div class="hero-grid"></div>
+    <div class="hero-tag"><span style="width:5px;height:5px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite;display:inline-block;"></span>Live prices — updated every minute</div>
+    <h1>Travel the world<br>at <em>unbeatable</em> <span>prices</span></h1>
+    <p class="hero-sub">Real flights, real hotels, real prices — search and book instantly.</p>
+
+    <div class="se">
+      <div class="se-tabs" id="ltabs">
+        <button class="se-tab active" onclick="switchTab('flights',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>Flights
+        </button>
+        <button class="se-tab" onclick="switchTab('hotels',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Hotels
+        </button>
+        <button class="se-tab" onclick="switchTab('packages',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>Packages
+        </button>
+        <button class="se-tab" onclick="switchTab('cars',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16,8 20,8 23,11 23,16 16,16 16,8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Cars
+        </button>
+        <button class="se-tab gold" onclick="switchTab('tp',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Travel Partner
+        </button>
+      </div>
+
+      <!-- FLIGHTS -->
+      <div id="tab-flights">
+        <div class="flight-opts">
+          <div class="radio-group">
+            <div class="radio-opt"><input type="radio" name="trip" id="rt-r" value="return" checked onchange="setTrip(this.value)"><label for="rt-r">Return</label></div>
+            <div class="radio-opt"><input type="radio" name="trip" id="rt-o" value="oneway" onchange="setTrip(this.value)"><label for="rt-o">One way</label></div>
+            <div class="radio-opt"><input type="radio" name="trip" id="rt-m" value="multi" onchange="setTrip(this.value)"><label for="rt-m">Multi-city</label></div>
+          </div>
+          <select class="class-sel" id="cabin-class">
+            <option value="economy">Economy</option>
+            <option value="premium_economy">Premium Economy</option>
+            <option value="business">Business</option>
+            <option value="first">First Class</option>
+          </select>
+        </div>
+        <div id="ft-return" class="sf-row fl">
+          <div class="sf autocomplete-wrap">
+            <label>From</label>
+            <input id="f-from" placeholder="City or airport" oninput="autocomplete(this,'f-from-list','from')" autocomplete="off"/>
+            <div class="autocomplete-list" id="f-from-list"></div>
+          </div>
+          <div class="sf autocomplete-wrap">
+            <label>To</label>
+            <input id="f-to" placeholder="City or airport" oninput="autocomplete(this,'f-to-list','to')" autocomplete="off"/>
+            <div class="autocomplete-list" id="f-to-list"></div>
+          </div>
+          <div class="sf"><label>Depart</label><input type="date" id="f-dep" min=""/></div>
+          <div class="sf"><label>Return</label><input type="date" id="f-ret" min=""/></div>
+          <div class="sf pax-wrap" id="fp-wrap">
+            <label>Passengers</label>
+            <button class="pax-btn" id="fp-btn" onclick="togglePax('fp')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span id="fp-label">1 adult</span>
+            </button>
+            <div class="pax-drop" id="fp-drop">
+              <div class="pax-row"><div><div class="pax-label">Adults</div><div class="pax-sub">12+ years</div></div><div class="pax-ctrl"><button class="pax-btn2" onclick="adjPax('fa',-1)" id="fa-m">−</button><span class="pax-count" id="fa-c">1</span><button class="pax-btn2" onclick="adjPax('fa',1)">+</button></div></div>
+              <div class="pax-row"><div><div class="pax-label">Children</div><div class="pax-sub">2–11 years</div></div><div class="pax-ctrl"><button class="pax-btn2" onclick="adjPax('fc',-1)" id="fc-m" disabled>−</button><span class="pax-count" id="fc-c">0</span><button class="pax-btn2" onclick="adjPax('fc',1)">+</button></div></div>
+              <div class="pax-row"><div><div class="pax-label">Infants</div><div class="pax-sub">Under 2</div></div><div class="pax-ctrl"><button class="pax-btn2" onclick="adjPax('fi',-1)" id="fi-m" disabled>−</button><span class="pax-count" id="fi-c">0</span><button class="pax-btn2" onclick="adjPax('fi',1)">+</button></div></div>
+              <button class="pax-done" onclick="closePax('fp')">Done</button>
+            </div>
+          </div>
+          <button class="sbtn" id="f-search-btn" onclick="searchFlights()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search
+          </button>
+        </div>
+        <div id="ft-oneway" class="sf-row" style="grid-template-columns:1fr 1fr 140px 160px auto;display:none;gap:10px;padding-bottom:28px;align-items:end;">
+          <div class="sf autocomplete-wrap"><label>From</label><input id="ow-from" placeholder="City or airport" oninput="autocomplete(this,'ow-from-list')" autocomplete="off"/><div class="autocomplete-list" id="ow-from-list"></div></div>
+          <div class="sf autocomplete-wrap"><label>To</label><input id="ow-to" placeholder="City or airport" oninput="autocomplete(this,'ow-to-list')" autocomplete="off"/><div class="autocomplete-list" id="ow-to-list"></div></div>
+          <div class="sf"><label>Depart</label><input type="date" id="ow-dep"/></div>
+          <div class="sf pax-wrap" id="owp-wrap">
+            <label>Passengers</label>
+            <button class="pax-btn" id="owp-btn" onclick="togglePax('owp')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span id="owp-label">1 adult</span>
+            </button>
+            <div class="pax-drop" id="owp-drop">
+              <div class="pax-row"><div><div class="pax-label">Adults</div></div><div class="pax-ctrl"><button class="pax-btn2" onclick="adjPax('owa',-1)" id="owa-m">−</button><span class="pax-count" id="owa-c">1</span><button class="pax-btn2" onclick="adjPax('owa',1)">+</button></div></div>
+              <div class="pax-row"><div><div class="pax-label">Children</div><div class="pax-sub">2–11</div></div><div class="pax-ctrl"><button class="pax-btn2" onclick="adjPax('owc',-1)" id="owc-m" disabled>−</button><span class="pax-count" id="owc-c">0</span><button class="pax-btn2" onclick="adjPax('owc',1)">+</button></div></div>
+              <div class="pax-row"><div><div class="pax-label">Infants</div></div><div class="pax-ctrl"><button class="pax-btn2" onclick="adjPax('owi',-1)" id="owi-m" disabled>−</button><span class="pax-count" id="owi-c">0</span><button class="pax-btn2" onclick="adjPax('owi',1)">+</button></div></div>
+              <button class="pax-done" onclick="closePax('owp')">Done</button>
+            </div>
+          </div>
+          <button class="sbtn" onclick="searchFlights()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</button>
+        </div>
+      </div>
+
+      <!-- HOTELS -->
+      <div id="tab-hotels" class="sf-row ho" style="display:none">
+        <div class="sf autocomplete-wrap">
+          <label>Destination</label>
+          <input id="h-dest" placeholder="City, hotel or landmark" autocomplete="off"/>
+        </div>
+        <div class="sf"><label>Check-in</label><input type="date" id="h-ci"/></div>
+        <div class="sf"><label>Check-out</label><input type="date" id="h-co"/></div>
+        <div class="sf pax-wrap" id="hp-wrap">
+          <label>Rooms & guests</label>
+          <button class="pax-btn" id="hp-btn" onclick="togglePax('hp')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            <span id="hp-label">1 room, 2 adults</span>
+          </button>
+          <div class="pax-drop" id="hp-drop">
+            <div class="pax-row"><div><div class="pax-label">Rooms</div></div><div class="pax-ctrl"><button class="pax-btn2" onclick="adjPax('hr',-1)" id="hr-m">−</button><span class="pax-count" id="hr-c">1</span><button class="pax-btn2" onclick="adjPax('hr',1)">+</button></div></div>
+            <div class="pax-row"><div><div class="pax-label">Adults</div></div><div class="pax-ctrl"><button class="pax-btn2" onclick="adjPax('ha',-1)" id="ha-m">−</button><span class="pax-count" id="ha-c">2</span><button class="pax-btn2" onclick="adjPax('ha',1)">+</button></div></div>
+            <div class="pax-row"><div><div class="pax-label">Children</div><div class="pax-sub">0–17</div></div><div class="pax-ctrl"><button class="pax-btn2" onclick="adjPax('hc',-1)" id="hc-m" disabled>−</button><span class="pax-count" id="hc-c">0</span><button class="pax-btn2" onclick="adjPax('hc',1)">+</button></div></div>
+            <button class="pax-done" onclick="closePax('hp')">Done</button>
+          </div>
+        </div>
+        <button class="sbtn" onclick="searchHotels()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</button>
+      </div>
+
+      <!-- PACKAGES -->
+      <div id="tab-packages" class="sf-row pk" style="display:none">
+        <div class="sf"><label>From</label><input id="pk-from" value="Seattle" placeholder="City"/></div>
+        <div class="sf"><label>To</label><input id="pk-to" placeholder="Destination"/></div>
+        <div class="sf"><label>Depart</label><input type="date" id="pk-dep"/></div>
+        <div class="sf"><label>Return</label><input type="date" id="pk-ret"/></div>
+        <button class="sbtn" onclick="searchPackages()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</button>
+      </div>
+
+      <!-- CARS -->
+      <div id="tab-cars" class="sf-row ca" style="display:none">
+        <div class="sf"><label>Pick-up location</label><input placeholder="City or airport"/></div>
+        <div class="sf"><label>Pick-up date</label><input type="date"/></div>
+        <div class="sf"><label>Drop-off date</label><input type="date"/></div>
+        <div class="sf"><label>Car type</label><select><option>Any</option><option>Economy</option><option>SUV</option><option>Luxury</option></select></div>
+        <button class="sbtn" onclick="searchCars()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</button>
+      </div>
+
+      <!-- TRAVEL PARTNER -->
+      <div id="tab-tp" class="sf-row tp" style="display:none">
+        <div class="sf"><label>Where are you going?</label><input placeholder="Destination city"/></div>
+        <div class="sf"><label>Depart</label><input type="date"/></div>
+        <div class="sf"><label>Return</label><input type="date"/></div>
+        <button class="sbtn teal-btn" onclick="searchTP()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Find Partners</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="trust-bar">
+    <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg><span><strong>Live prices</strong> from 500+ airlines</span></div>
+    <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span><strong>Best Price</strong> Guarantee</span></div>
+    <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg><span><strong>24/7</strong> Support</span></div>
+    <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span><strong>info@tripondeals.com</strong></span></div>
+  </div>
+
+  <div class="sec">
+    <div class="eyebrow">Handpicked for you</div>
+    <div class="sec-title">Today's <em>hottest</em> deals</div>
+    <div class="dest-grid">
+      <div class="dc" onclick="quickSearch('Bali','DPS')"><div class="dc-bg bali"></div><div class="dc-overlay"></div><div class="dc-content"><div class="dc-city">Bali</div><div class="dc-country">Indonesia</div><div class="dc-footer"><div class="dc-price">from $842 <small>/ person</small></div><div class="dc-save">Save 38%</div></div></div></div>
+      <div class="dc" onclick="quickSearch('Paris','CDG')"><div class="dc-bg paris"></div><div class="dc-overlay"></div><div class="dc-content"><div class="dc-city">Paris</div><div class="dc-country">France</div><div class="dc-footer"><div class="dc-price">from $1,140 <small>/ person</small></div><div class="dc-save">Save 24%</div></div></div></div>
+      <div class="dc" onclick="quickSearch('Dubai','DXB')"><div class="dc-bg dubai"></div><div class="dc-overlay"></div><div class="dc-content"><div class="dc-city">Dubai</div><div class="dc-country">UAE</div><div class="dc-footer"><div class="dc-price">from $990 <small>/ person</small></div><div class="dc-save">Save 29%</div></div></div></div>
+      <div class="dc" onclick="quickSearch('Tokyo','HND')"><div class="dc-bg tokyo"></div><div class="dc-overlay"></div><div class="dc-content"><div class="dc-city">Tokyo</div><div class="dc-country">Japan</div><div class="dc-footer"><div class="dc-price">from $1,320 <small>/ person</small></div><div class="dc-save">Save 21%</div></div></div></div>
+      <div class="dc" onclick="quickSearch('New York','JFK')"><div class="dc-bg ny"></div><div class="dc-overlay"></div><div class="dc-content"><div class="dc-city">New York</div><div class="dc-country">USA</div><div class="dc-footer"><div class="dc-price">from $690 <small>/ person</small></div><div class="dc-save">Save 19%</div></div></div></div>
+    </div>
+  </div>
+
+  <div class="tpsec">
+    <div class="tpinner">
+      <div>
+        <div class="tp-ey">✦ Exclusive to TripOnDeals</div>
+        <div class="tp-t">Find your perfect <em>travel partner</em></div>
+        <p class="tp-d">Connect with verified travelers heading to the same destination. Split costs, share adventures, make lifelong friends.</p>
+        <div class="tp-feats">
+          <div class="tp-feat"><div class="tp-fi"><svg viewBox="0 0 24 24" fill="none" stroke="#d4a843" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="tp-ft"><strong>AI-powered matching</strong><span>Matched by destination, travel style & personality.</span></div></div>
+          <div class="tp-feat"><div class="tp-fi"><svg viewBox="0 0 24 24" fill="none" stroke="#d4a843" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="tp-ft"><strong>100% verified profiles</strong><span>Government ID verification before every match.</span></div></div>
+          <div class="tp-feat"><div class="tp-fi"><svg viewBox="0 0 24 24" fill="none" stroke="#d4a843" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div class="tp-ft"><strong>Plan & book together</strong><span>Share itineraries and split costs in-app.</span></div></div>
+        </div>
+        <div class="tp-acts"><button class="btn-gold" onclick="switchTab('tp');goHome()">Find my travel partner</button><button class="btn-ghost">How it works</button></div>
+      </div>
+      <div class="mw">
+        <div class="mfloat">✦ 3 new matches today</div>
+        <div class="mcard">
+          <div class="mhdr"><span class="mttl">Your matches</span><span class="mlive"><span class="mld"></span>Live</span></div>
+          <div class="mdest"><span class="mpill">✈ Bali, Indonesia</span><span class="mdates">Jul 10–20</span></div>
+          <div class="mlist">
+            <div class="mi"><div class="mav av1">SR</div><div style="flex:1"><div class="mname">Sophie R.</div><div class="mmeta">28 · Solo · Photography, Hiking</div><div class="mbar"><div class="mbf" style="width:94%"></div></div></div><div style="text-align:right"><div class="mpct">94%</div><div class="mpctl">match</div></div></div>
+            <div class="mi"><div class="mav av2">JK</div><div style="flex:1"><div class="mname">James K.</div><div class="mmeta">31 · Backpacker · Food, Surf</div><div class="mbar"><div class="mbf" style="width:87%"></div></div></div><div style="text-align:right"><div class="mpct">87%</div><div class="mpctl">match</div></div></div>
+            <div class="mi"><div class="mav av3">AL</div><div style="flex:1"><div class="mname">Anika L.</div><div class="mmeta">26 · Adventure · Diving, Yoga</div><div class="mbar"><div class="mbf" style="width:81%"></div></div></div><div style="text-align:right"><div class="mpct">81%</div><div class="mpctl">match</div></div></div>
+          </div>
+          <div class="macts"><button class="mbp">Connect with Sophie →</button><button class="mbs">Browse all</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="featsec">
+    <div class="featinner">
+      <div class="eyebrow">Why TripOnDeals</div>
+      <div class="sec-title" style="margin-bottom:36px;">Built for the <em>smart</em> traveler</div>
+      <div class="featgrid">
+        <div class="fcard"><div class="fi" style="background:#ecfdf5;"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="ft">Best Price Guarantee</div><div class="fd">Find a lower price within 24h? We refund the difference — no questions.</div></div>
+        <div class="fcard"><div class="fi" style="background:#eff6ff;"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div><div class="ft">Real-Time Prices</div><div class="fd">Live data from 500+ airlines and 1M+ hotels — updated every 60 seconds.</div></div>
+        <div class="fcard"><div class="fi" style="background:#fff7ed;"><svg viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="ft">Bank-Grade Security</div><div class="fd">256-bit SSL + PCI DSS Level 1 compliance on every payment.</div></div>
+        <div class="fcard dark"><div class="fi" style="background:rgba(212,168,67,0.12);"><svg viewBox="0 0 24 24" fill="none" stroke="#d4a843" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="ft">Travel Partner™</div><div class="fd">Find verified travel companions. Exclusive to TripOnDeals.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ctasec">
+    <div class="cta-title">Ready for your next <em>adventure?</em></div>
+    <p class="cta-sub">Real prices. Real hotels. Book in minutes.</p>
+    <div class="cta-btns">
+      <button class="btn-teal" onclick="switchTab('flights');document.getElementById('f-to').focus()">Search flights now</button>
+      <button class="btn-ow" onclick="switchTab('hotels');document.getElementById('h-dest').focus()">Find a hotel</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-top">
+      <div class="fbrand">
+        <div class="logo"><span class="logo-dot"></span>TripOnDeals</div>
+        <div class="ftagline">Travel more. Spend less. Go together.</div>
+        <a href="mailto:info@tripondeals.com" class="femail">info@tripondeals.com</a>
+      </div>
+      <div class="fcols">
+        <div class="fcol"><h5>Search</h5><ul><li><a onclick="switchTab('flights');goHome()">Flights</a></li><li><a onclick="switchTab('hotels');goHome()">Hotels</a></li><li><a onclick="switchTab('packages');goHome()">Packages</a></li><li><a onclick="switchTab('cars');goHome()">Car rentals</a></li></ul></div>
+        <div class="fcol"><h5>Company</h5><ul><li><a>About us</a></li><li><a>Careers</a></li><li><a>Press</a></li><li><a>Blog</a></li></ul></div>
+        <div class="fcol"><h5>Support</h5><ul><li><a>Help centre</a></li><li><a href="mailto:info@tripondeals.com">Contact</a></li><li><a>Privacy</a></li><li><a>Terms</a></li></ul></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span class="fcopy">© 2026 TripOnDeals. All rights reserved.</span></div>
+  </div>
+</div>
+
+<!-- RESULTS PAGE -->
+<div class="page" id="p-res">
+  <div class="rpage">
+    <div class="rcontainer">
+      <div class="rtop">
+        <div><div class="rheading" id="r-heading">Searching...</div><div class="rsub" id="r-sub"></div></div>
+        <div class="sort-pills">
+          <button class="sort-pill active" onclick="setSP(this)">Best value</button>
+          <button class="sort-pill" onclick="setSP(this)">Cheapest</button>
+          <button class="sort-pill" onclick="setSP(this)">Fastest</button>
+        </div>
+      </div>
+      <div class="rlayout">
+        <div class="fpanel">
+          <div class="fp-title">Filters <button class="fp-clear" onclick="clearF()">Clear all</button></div>
+          <div class="fp-sec">
+            <div class="fp-sec-title">Max price</div>
+            <input type="range" class="ps" min="100" max="5000" value="5000" step="50" oninput="document.getElementById('pval').textContent='$'+parseInt(this.value).toLocaleString()"/>
+            <div class="prange"><span>$100</span><span id="pval">$5,000</span></div>
+          </div>
+          <div class="fp-sec" id="fp-stops">
+            <div class="fp-sec-title">Stops</div>
+            <div class="fo"><input type="checkbox" checked id="cb-ns"><label for="cb-ns">Non-stop</label></div>
+            <div class="fo"><input type="checkbox" checked id="cb-1s"><label for="cb-1s">1 stop</label></div>
+            <div class="fo"><input type="checkbox" checked id="cb-2s"><label for="cb-2s">2+ stops</label></div>
+          </div>
+          <div class="fp-sec" id="fp-stars" style="display:none">
+            <div class="fp-sec-title">Star rating</div>
+            <div class="star-row">
+              <button class="star-btn active" onclick="this.classList.toggle('active')">★ 5</button>
+              <button class="star-btn active" onclick="this.classList.toggle('active')">★ 4</button>
+              <button class="star-btn active" onclick="this.classList.toggle('active')">★ 3</button>
+            </div>
+          </div>
+          <div class="fp-sec" id="fp-amen" style="display:none">
+            <div class="fp-sec-title">Amenities</div>
+            <div class="amen-grid">
+              <div class="amen-check"><input type="checkbox"><label>Pool</label></div>
+              <div class="amen-check"><input type="checkbox"><label>Spa</label></div>
+              <div class="amen-check"><input type="checkbox" checked><label>WiFi</label></div>
+              <div class="amen-check"><input type="checkbox"><label>Gym</label></div>
+              <div class="amen-check"><input type="checkbox"><label>Parking</label></div>
+              <div class="amen-check"><input type="checkbox"><label>Breakfast</label></div>
+            </div>
+          </div>
+          <div class="fp-sec">
+            <div class="fp-sec-title">Preferences</div>
+            <div class="fo"><input type="checkbox" checked><label>Free cancellation</label></div>
+            <div class="fo"><input type="checkbox"><label>No hidden fees</label></div>
+          </div>
+        </div>
+        <div class="rcards" id="r-cards">
+          <div class="loading"><div class="spinner"></div><div class="loading-text">Searching live prices...</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL PAGE -->
+<div class="page" id="p-det">
+  <div class="dpage">
+    <div class="dcontainer">
+      <div class="dgrid">
+        <div class="dmain">
+          <div class="dhero" id="d-hero"></div>
+          <div class="dbody">
+            <div class="dname" id="d-name"></div>
+            <div class="dsub" id="d-sub"></div>
+            <div class="dsec" id="d-info"></div>
+            <div class="dsec"><div class="dsec-title">Amenities & inclusions</div><div class="dam-grid" id="d-amen"></div></div>
+            <div class="dsec"><div class="dsec-title">Booking policy</div>
+              <div class="drow"><span class="dl">Cancellation</span><span class="dv" style="color:var(--teal)">Free within 24 hours</span></div>
+              <div class="drow"><span class="dl">Changes</span><span class="dv">Allowed (fee may apply)</span></div>
+              <div class="drow"><span class="dl">Baggage</span><span class="dv" id="d-bag">1 carry-on included</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="dsidebar">
+          <div class="pw">
+            <div class="pw-price" id="d-price"></div>
+            <div class="pw-note" id="d-pnote">per person · all taxes included</div>
+            <div id="d-brkd"></div>
+            <button class="pw-btn" onclick="goChk()">Book now — secure this price</button>
+            <div class="pw-trust">
+              <div class="pw-ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Free 24h cancellation</div>
+              <div class="pw-ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>Price match guarantee</div>
+              <div class="pw-ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Secure SSL checkout</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT PAGE -->
+<div class="page" id="p-chk">
+  <div class="copage">
+    <div class="cocontainer">
+      <div class="costeps">
+        <div class="costep done"><span class="cosn">Step 1</span>Search</div>
+        <div class="costep done"><span class="cosn">Step 2</span>Select</div>
+        <div class="costep active" id="cs3"><span class="cosn">Step 3</span>Your details</div>
+        <div class="costep" id="cs4"><span class="cosn">Step 4</span>Payment</div>
+        <div class="costep" id="cs5"><span class="cosn">Step 5</span>Confirmed</div>
+      </div>
+      <div class="cogrid">
+        <div class="coml">
+          <div class="cocard" id="pax-card">
+            <div class="cotitle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Traveller details</div>
+            <div class="fgrid">
+              <div class="ff"><label>First name</label><input id="pf" placeholder="John"/></div>
+              <div class="ff"><label>Last name</label><input id="pl" placeholder="Smith"/></div>
+              <div class="ff"><label>Date of birth</label><input type="date"/></div>
+              <div class="ff"><label>Nationality</label><select><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Australia</option><option>India</option><option>UAE</option><option>Other</option></select></div>
+              <div class="ff"><label>Passport number</label><input placeholder="A12345678"/></div>
+              <div class="ff"><label>Passport expiry</label><input type="date"/></div>
+              <div class="ff full"><label>Email address</label><input type="email" id="pe" placeholder="john@email.com"/></div>
+              <div class="ff full"><label>Phone number</label><input type="tel" placeholder="+1 (206) 555-0100"/></div>
+            </div>
+            <button class="cobtn" onclick="goPay()">Continue to payment →</button>
+          </div>
+          <div class="cocard" id="pay-card" style="display:none">
+            <div class="cotitle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payment details</div>
+            <div class="clogos">
+              <div class="clogo" style="color:#1a1f71;">VISA</div>
+              <div class="clogo" style="color:#eb001b;">MC</div>
+              <div class="clogo" style="color:#007bc1;">AMEX</div>
+              <div class="clogo" style="color:#00457c;">PayPal</div>
+            </div>
+            <div class="fgrid">
+              <div class="ff full"><label>Cardholder name</label><input id="cn" placeholder="John Smith"/></div>
+              <div class="ff full"><label>Card number</label><input id="cnum" placeholder="1234  5678  9012  3456" maxlength="19" oninput="fcn(this)"/></div>
+              <div class="ff"><label>Expiry</label><input id="cexp" placeholder="MM / YY" maxlength="7" oninput="fce(this)"/></div>
+              <div class="ff"><label>CVV</label><input id="ccvv" placeholder="•••" maxlength="4"/></div>
+              <div class="ff full"><label>Billing address</label><input placeholder="123 Main Street, Seattle, WA"/></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:10px;padding:9px 11px;background:var(--warm);border-radius:8px;border:1px solid var(--border);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <span style="font-size:11px;color:var(--muted);">256-bit SSL · PCI DSS · Card data never stored on our servers</span>
+            </div>
+            <button class="cobtn" id="pay-btn" onclick="procPay()">Confirm & complete booking</button>
+          </div>
+        </div>
+        <div class="obox">
+          <div class="ot">Your order</div>
+          <div class="oi" id="o-item"></div>
+          <div class="orows" id="o-rows"></div>
+          <div class="sec-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Secure booking · Best price guaranteed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRMATION -->
+<div class="page" id="p-cf">
+  <div class="cfpage">
+    <div class="cfcard">
+      <div class="cf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2.5" stroke-linecap="round"><polyline points="20,6 9,17 4,12"/></svg></div>
+      <div class="cf-title">You're all booked!</div>
+      <p class="cf-sub">Your trip is confirmed. Tickets and itinerary heading to your inbox now.</p>
+      <div class="ref-box"><div class="ref-label">Booking reference</div><div class="ref-code" id="cf-ref"></div></div>
+      <div class="cf-details" id="cf-details"></div>
+      <div class="cf-actions"><button class="btn-dark" onclick="goHome()">Book another trip</button><button class="btn-outline">Download e-ticket</button></div>
+      <div class="cf-enote">Confirmation sent to <strong id="cf-email"></strong></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── CONFIG ───
+var API_BASE = window.location.origin; // same domain — Vercel serves both
+var PAX = {fa:1,fc:0,fi:0,hr:1,ha:2,hc:0,owa:1,owc:0,owi:0};
+var S = {type:'flights', sel:null, searchParams:{}};
+var acTimers = {};
+
+// ─── PAGE ROUTING ───
+function showPage(id){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  var nb=document.getElementById('nav-back'), mn=document.getElementById('main-nav');
+  nb.style.display = id==='p-land'?'none':'block';
+  mn.style.display = id==='p-land'?'flex':'none';
+  window.scrollTo(0,0);
+}
+function goHome(){showPage('p-land');}
+function goBack(){
+  var c=document.querySelector('.page.active').id;
+  if(c==='p-res')showPage('p-land');
+  else if(c==='p-det')showPage('p-res');
+  else if(c==='p-chk')showPage('p-det');
+  else showPage('p-land');
+}
+
+// ─── TABS ───
+function switchTab(t, btn){
+  var tabs=['flights','hotels','packages','cars','tp'];
+  tabs.forEach(function(x){
+    var el=document.getElementById('tab-'+x);
+    if(el) el.style.display='none';
+    var rt=document.getElementById('ft-return');
+    var ro=document.getElementById('ft-oneway');
+    if(rt) rt.style.display='none';
+    if(ro) ro.style.display='none';
+  });
+  var el=document.getElementById('tab-'+t);
+  if(el) el.style.display=(t==='flights')?'block':'grid';
+  if(t==='flights'){
+    var v=document.querySelector('input[name="trip"]:checked').value;
+    setTrip(v);
+  }
+  document.querySelectorAll('#ltabs .se-tab').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  else {
+    var idx={'flights':0,'hotels':1,'packages':2,'cars':3,'tp':4}[t];
+    var btns=document.querySelectorAll('#ltabs .se-tab');
+    if(btns[idx]) btns[idx].classList.add('active');
+  }
+  // show/hide filters
+  document.getElementById('fp-stops').style.display=t==='flights'?'block':'none';
+  document.getElementById('fp-stars').style.display=t==='hotels'?'block':'none';
+  document.getElementById('fp-amen').style.display=t==='hotels'?'block':'none';
+}
+
+function setTrip(v){
+  var ret=document.getElementById('ft-return');
+  var ow=document.getElementById('ft-oneway');
+  if(v==='return'){ret.style.display='grid';ow.style.display='none';}
+  else if(v==='oneway'){ret.style.display='none';ow.style.display='grid';}
+  else{ret.style.display='none';ow.style.display='none';}
+}
+
+// ─── PAX ───
+var PAX_MINS={fa:1,fc:0,fi:0,hr:1,ha:1,hc:0,owa:1,owc:0,owi:0};
+function adjPax(k,d){
+  PAX[k]=Math.max(PAX_MINS[k]||0, PAX[k]+d);
+  var el=document.getElementById(k+'-c');
+  var m=document.getElementById(k+'-m');
+  if(el) el.textContent=PAX[k];
+  if(m) m.disabled=PAX[k]<=(PAX_MINS[k]||0);
+  updatePaxLabels();
+}
+function updatePaxLabels(){
+  var fa=PAX.fa,fc=PAX.fc,fi=PAX.fi;
+  var p=[fa+' adult'+(fa>1?'s':'')];
+  if(fc>0)p.push(fc+' child'+(fc>1?'ren':''));
+  if(fi>0)p.push(fi+' infant'+(fi>1?'s':''));
+  var lbl=p.join(', ');
+  if(document.getElementById('fp-label')) document.getElementById('fp-label').textContent=lbl;
+  if(document.getElementById('owp-label')) document.getElementById('owp-label').textContent=lbl;
+  var hr=PAX.hr,ha=PAX.ha,hc=PAX.hc;
+  var hl=hr+' room'+(hr>1?'s':'')+', '+ha+' adult'+(ha>1?'s':'')+(hc>0?', '+hc+' child'+(hc>1?'ren':''):'');
+  if(document.getElementById('hp-label')) document.getElementById('hp-label').textContent=hl;
+}
+function togglePax(id){
+  var d=document.getElementById(id+'-drop');
+  var b=document.getElementById(id+'-btn');
+  var isOpen=d.classList.contains('open');
+  document.querySelectorAll('.pax-drop').forEach(function(x){x.classList.remove('open');});
+  document.querySelectorAll('.pax-btn').forEach(function(x){x.classList.remove('open');});
+  if(!isOpen){d.classList.add('open');b.classList.add('open');}
+}
+function closePax(id){
+  document.getElementById(id+'-drop').classList.remove('open');
+  document.getElementById(id+'-btn').classList.remove('open');
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.pax-wrap')){
+    document.querySelectorAll('.pax-drop').forEach(function(x){x.classList.remove('open');});
+    document.querySelectorAll('.pax-btn').forEach(function(x){x.classList.remove('open');});
+  }
+  if(!e.target.closest('.autocomplete-wrap')){
+    document.querySelectorAll('.autocomplete-list').forEach(function(x){x.classList.remove('open');});
+  }
+});
+
+// ─── AUTOCOMPLETE ───
+function autocomplete(input, listId){
+  var q=input.value.trim();
+  if(q.length<2){document.getElementById(listId).classList.remove('open');return;}
+  clearTimeout(acTimers[listId]);
+  acTimers[listId]=setTimeout(function(){
+    fetch(API_BASE+'/api/airports?q='+encodeURIComponent(q))
+      .then(function(r){return r.json();})
+      .then(function(data){
+        var list=document.getElementById(listId);
+        list.innerHTML='';
+        if(!data||!data.length){list.classList.remove('open');return;}
+        data.forEach(function(item){
+          var div=document.createElement('div');
+          div.className='ac-item';
+          div.innerHTML='<div class="ac-name">'+item.name+'</div><div class="ac-sub">'+item.subtitle+'</div>';
+          div.onclick=function(){
+            input.value=item.name+' ('+item.id+')';
+            input.dataset.skyId=item.skyId;
+            input.dataset.entityId=item.id;
+            list.classList.remove('open');
+          };
+          list.appendChild(div);
+        });
+        list.classList.add('open');
+      })
+      .catch(function(){});
+  }, 300);
+}
+
+// ─── SEARCH FLIGHTS ───
+function searchFlights(){
+  var tripType=document.querySelector('input[name="trip"]:checked').value;
+  var from, to, dep, ret;
+  if(tripType==='oneway'){
+    from=document.getElementById('ow-from').value.trim();
+    to=document.getElementById('ow-to').value.trim();
+    dep=document.getElementById('ow-dep').value;
+  } else {
+    from=document.getElementById('f-from').value.trim();
+    to=document.getElementById('f-to').value.trim();
+    dep=document.getElementById('f-dep').value;
+    ret=document.getElementById('f-ret').value;
+  }
+  if(!from||!to||!dep){alert('Please fill in From, To and Depart date.');return;}
+  var cabin=document.getElementById('cabin-class').value;
+  var adults=PAX.fa, children=PAX.fc;
+  S.type='flights';
+  S.searchParams={from,to,dep,ret,adults,children,cabin};
+  var fromLabel=from.split('(')[0].trim()||from;
+  var toLabel=to.split('(')[0].trim()||to;
+  document.getElementById('r-heading').textContent='Flights · '+fromLabel+' → '+toLabel;
+  document.getElementById('r-sub').textContent='Searching live prices...';
+  showPage('p-res');
+  document.getElementById('r-cards').innerHTML='<div class="loading"><div class="spinner"></div><div class="loading-text">Searching live flight prices from 500+ airlines...</div></div>';
+  // Extract entity IDs
+  var fromEl=document.getElementById(tripType==='oneway'?'ow-from':'f-from');
+  var toEl=document.getElementById(tripType==='oneway'?'ow-to':'f-to');
+  var fromId=fromEl.dataset.entityId||from;
+  var toId=toEl.dataset.entityId||to;
+  var url=API_BASE+'/api/flights?from='+encodeURIComponent(fromId)+'&to='+encodeURIComponent(toId)+'&date='+dep+'&adults='+adults+'&children='+children+'&cabinClass='+cabin;
+  if(ret) url+='&returnDate='+ret;
+  fetch(url)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      document.getElementById('r-sub').textContent=(data.count||0)+' flights found · live prices';
+      renderFlights(data.itineraries||[]);
+    })
+    .catch(function(err){
+      document.getElementById('r-cards').innerHTML='<div class="error-box">Could not load flights. Please try again.<br><small>'+err.message+'</small></div>';
+    });
+}
+
+function renderFlights(flights){
+  var c=document.getElementById('r-cards');
+  if(!flights.length){
+    c.innerHTML='<div class="no-results">No flights found for this route and date. Try different dates or airports.</div>';
+    return;
+  }
+  c.innerHTML='';
+  flights.forEach(function(f){
+    var sl=f.stops===0?'<span style="color:var(--teal);font-weight:500;">Non-stop</span>':f.stops===1?'1 stop'+(f.stopCity?' via '+f.stopCity:''):'2+ stops';
+    var div=document.createElement('div');
+    div.className='frc';
+    div.innerHTML=
+      '<div class="frc-top">'+
+        '<div class="al-badge">'+f.airlineCode+'</div>'+
+        '<div class="al-name">'+f.airline+'</div>'+
+        '<div class="frt">'+
+          '<div class="rt-time"><div class="t">'+f.dep+'</div><div class="ap">'+f.from+'</div></div>'+
+          '<div class="rt-track"><div class="dur">'+f.duration+'</div><div class="rt-line"></div><div class="stp">'+sl+'</div></div>'+
+          '<div class="rt-time"><div class="t">'+f.arr+'</div><div class="ap">'+f.to+'</div></div>'+
+        '</div>'+
+        '<div class="frc-price">'+
+          '<div class="pr">'+f.priceFormatted+'</div>'+
+          '<div class="per">per person</div>'+
+          '<button class="bk" onclick="event.stopPropagation();selFlight(this)">Select →</button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="frc-tags">'+
+        (f.tags&&f.tags.includes('cheapest')?'<span class="ftag a">Cheapest</span>':'')+
+        (f.tags&&f.tags.includes('fastest')?'<span class="ftag b">Fastest</span>':'')+
+        (f.stops===0?'<span class="ftag g">Non-stop</span>':'')+
+        '<span class="ftag b">Free cancellation</span>'+
+      '</div>';
+    div.onclick=function(){selFlightObj(f);};
+    div.dataset.flight=JSON.stringify(f);
+    c.appendChild(div);
+  });
+}
+
+function selFlightObj(f){
+  S.sel=f; S.type='flights';
+  document.getElementById('d-hero').className='dhero fh';
+  document.getElementById('d-hero').innerHTML='<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg><div class="dhero-badge">'+S.searchParams.cabin.replace('_',' ')+'</div>';
+  document.getElementById('d-name').textContent=f.airline+' · '+f.from+' → '+f.to;
+  document.getElementById('d-sub').textContent=f.duration+' · '+(f.stops===0?'Non-stop':f.stops+' stop')+(f.stopCity?' via '+f.stopCity:'');
+  document.getElementById('d-info').innerHTML='<div class="dsec-title">Flight details</div>'+
+    '<div class="drow"><span class="dl">Airline</span><span class="dv">'+f.airline+'</span></div>'+
+    '<div class="drow"><span class="dl">From</span><span class="dv">'+f.fromCity+' ('+f.from+')</span></div>'+
+    '<div class="drow"><span class="dl">To</span><span class="dv">'+f.toCity+' ('+f.to+')</span></div>'+
+    '<div class="drow"><span class="dl">Departure</span><span class="dv">'+f.dep+' · '+f.depDate+'</span></div>'+
+    '<div class="drow"><span class="dl">Arrival</span><span class="dv">'+f.arr+' · '+f.arrDate+'</span></div>'+
+    '<div class="drow"><span class="dl">Duration</span><span class="dv">'+f.duration+'</span></div>'+
+    '<div class="drow"><span class="dl">Stops</span><span class="dv">'+(f.stops===0?'Non-stop':f.stops+' stop'+(f.stopCity?' via '+f.stopCity:''))+'</span></div>';
+  document.getElementById('d-amen').innerHTML=['Carry-on included','Check-in bag','In-flight meals','Entertainment','USB charging','Seat selection'].map(function(a){return'<div class="dam">'+a+'</div>';}).join('');
+  document.getElementById('d-bag').textContent='1 carry-on + 23kg checked bag';
+  document.getElementById('d-price').textContent=f.priceFormatted;
+  document.getElementById('d-pnote').textContent='per person · taxes included';
+  var tax=Math.round(f.price*.18);
+  document.getElementById('d-brkd').innerHTML='<div class="pw-row"><span class="pl">Base fare</span><span>$'+Math.round(f.price*.82)+'</span></div><div class="pw-row"><span class="pl">Taxes & fees</span><span>$'+tax+'</span></div><div class="pw-row tot"><span>Total</span><span>'+f.priceFormatted+'</span></div>';
+  showPage('p-det');
+}
+function selFlight(btn){
+  var data=JSON.parse(btn.closest('.frc').dataset.flight);
+  selFlightObj(data);
+}
+
+// ─── SEARCH HOTELS ───
+function searchHotels(){
+  var dest=document.getElementById('h-dest').value.trim();
+  var ci=document.getElementById('h-ci').value;
+  var co=document.getElementById('h-co').value;
+  if(!dest||!ci||!co){alert('Please fill in destination, check-in and check-out dates.');return;}
+  S.type='hotels';
+  S.searchParams={dest,ci,co};
+  document.getElementById('r-heading').textContent='Hotels in '+dest;
+  document.getElementById('r-sub').textContent='Searching...';
+  document.getElementById('fp-stops').style.display='none';
+  document.getElementById('fp-stars').style.display='block';
+  document.getElementById('fp-amen').style.display='block';
+  showPage('p-res');
+  document.getElementById('r-cards').innerHTML='<div class="loading"><div class="spinner"></div><div class="loading-text">Searching hotels in '+dest+'...</div></div>';
+  fetch(API_BASE+'/api/hotels?destination='+encodeURIComponent(dest)+'&checkin='+ci+'&checkout='+co+'&adults='+PAX.ha+'&rooms='+PAX.hr)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      document.getElementById('r-sub').textContent=(data.count||0)+' hotels found';
+      renderHotels(data.hotels||[]);
+    })
+    .catch(function(err){
+      document.getElementById('r-cards').innerHTML='<div class="error-box">Could not load hotels. Please try again.</div>';
+    });
+}
+
+function renderHotels(hotels){
+  var c=document.getElementById('r-cards');
+  if(!hotels.length){
+    c.innerHTML='<div class="no-results">No hotels found. Try a different destination or dates.</div>';
+    return;
+  }
+  c.innerHTML='';
+  hotels.forEach(function(h){
+    var stars='★'.repeat(h.stars||4);
+    var div=document.createElement('div');
+    div.className='hrc';
+    div.innerHTML=
+      '<div class="hrc-img">'+(h.photo?'<img src="'+h.photo+'" alt="'+h.name+'" onerror="this.style.display=\'none\'"/>':'')+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>'+
+      '</div>'+
+      '<div class="hrc-body">'+
+        '<div class="hrc-name">'+h.name+'</div>'+
+        '<div class="hrc-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'+h.location+'</div>'+
+        '<div class="hrc-stars">'+stars+'</div>'+
+        '<div class="hrc-footer">'+
+          '<div class="hrc-pr"><div class="pr">$'+h.price+'</div><div class="hrc-per">per night</div>'+
+            '<div style="margin-top:6px;"><span class="score-badge">'+h.rating+'</span><span style="font-size:11px;color:var(--muted);">'+h.ratingLabel+'</span></div>'+
+          '</div>'+
+          '<button style="background:var(--teal);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-size:12px;font-weight:500;white-space:nowrap;" onclick="event.stopPropagation();selHotelObj('+JSON.stringify(h).replace(/"/g,'&quot;')+')">Select room →</button>'+
+        '</div>'+
+      '</div>';
+    div.onclick=function(){selHotelObj(h);};
+    c.appendChild(div);
+  });
+}
+
+function selHotelObj(h){
+  S.sel=h; S.type='hotels';
+  document.getElementById('d-hero').className='dhero hh';
+  document.getElementById('d-hero').innerHTML=(h.photo?'<img src="'+h.photo+'" alt="'+h.name+'"/>':'')+
+    '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>'+
+    '<div class="dhero-badge">'+h.rating+' · '+h.ratingLabel+'</div>';
+  document.getElementById('d-name').textContent=h.name;
+  document.getElementById('d-sub').textContent='★'.repeat(h.stars||4)+' · '+h.location;
+  var nights=Math.max(1,Math.round((new Date(S.searchParams.co)-new Date(S.searchParams.ci))/(1000*60*60*24)));
+  document.getElementById('d-info').innerHTML='<div class="dsec-title">Property details</div>'+
+    '<div class="drow"><span class="dl">Location</span><span class="dv">'+h.location+'</span></div>'+
+    '<div class="drow"><span class="dl">Check-in</span><span class="dv">'+h.checkin+'</span></div>'+
+    '<div class="drow"><span class="dl">Check-out</span><span class="dv">'+h.checkout+'</span></div>'+
+    '<div class="drow"><span class="dl">Rooms</span><span class="dv">'+PAX.hr+' room'+(PAX.hr>1?'s':'')+'</span></div>'+
+    '<div class="drow"><span class="dl">Guests</span><span class="dv">'+PAX.ha+' adult'+(PAX.ha>1?'s':'')+'</span></div>'+
+    '<div class="drow"><span class="dl">Guest score</span><span class="dv">'+h.rating+'/10 · '+h.ratingLabel+'</span></div>'+
+    '<div class="drow"><span class="dl">Reviews</span><span class="dv">'+h.reviewCount.toLocaleString()+' verified guests</span></div>';
+  document.getElementById('d-amen').innerHTML=['Free WiFi','Air conditioning','24h Reception','Room service','Concierge'].map(function(a){return'<div class="dam">'+a+'</div>';}).join('');
+  document.getElementById('d-bag').textContent='Luggage storage available';
+  var total=Math.round(h.price*nights*PAX.hr);
+  var tax=Math.round(total*.12);
+  document.getElementById('d-price').textContent='$'+h.price;
+  document.getElementById('d-pnote').textContent='per night · taxes included';
+  document.getElementById('d-brkd').innerHTML='<div class="pw-row"><span class="pl">$'+h.price+' × '+nights+' night'+(nights>1?'s':'')+'</span><span>$'+h.price*nights+'</span></div>'+
+    (PAX.hr>1?'<div class="pw-row"><span class="pl">× '+PAX.hr+' rooms</span><span>$'+h.price*nights*PAX.hr+'</span></div>':'')+
+    '<div class="pw-row"><span class="pl">Taxes (12%)</span><span>$'+tax+'</span></div>'+
+    '<div class="pw-row tot"><span>Total stay</span><span>$'+(total+tax)+'</span></div>';
+  showPage('p-det');
+}
+
+// ─── PACKAGES (uses flight search as base) ───
+function searchPackages(){
+  var to=document.getElementById('pk-to').value.trim();
+  if(!to){alert('Please enter a destination.');return;}
+  document.getElementById('f-to').value=to;
+  document.getElementById('f-dep').value=document.getElementById('pk-dep').value;
+  document.getElementById('f-ret').value=document.getElementById('pk-ret').value;
+  searchFlights();
+}
+
+// ─── CARS (mock) ───
+function searchCars(){
+  document.getElementById('r-heading').textContent='Car rentals';
+  document.getElementById('r-sub').textContent='Coming soon — connect car rental API';
+  showPage('p-res');
+  document.getElementById('r-cards').innerHTML='<div class="no-results">Car rental search coming soon. Contact info@tripondeals.com to request early access.</div>';
+}
+
+// ─── TRAVEL PARTNER (mock) ───
+function searchTP(){
+  document.getElementById('r-heading').textContent='Travel Partner matches';
+  document.getElementById('r-sub').textContent='18 verified partners matched';
+  showPage('p-res');
+  document.getElementById('r-cards').innerHTML='<div class="no-results">Travel Partner matching is launching soon. Sign up at info@tripondeals.com to be notified first.</div>';
+}
+
+// ─── QUICK SEARCH from dest cards ───
+function quickSearch(city, code){
+  document.getElementById('f-to').value=city+' ('+code+')';
+  document.getElementById('f-to').dataset.entityId=code;
+  var tomorrow=new Date(); tomorrow.setDate(tomorrow.getDate()+14);
+  var ret=new Date(); ret.setDate(ret.getDate()+21);
+  document.getElementById('f-dep').value=tomorrow.toISOString().split('T')[0];
+  document.getElementById('f-ret').value=ret.toISOString().split('T')[0];
+  switchTab('flights');
+  goHome();
+  setTimeout(function(){searchFlights();},300);
+}
+
+// ─── CHECKOUT ───
+function goChk(){
+  var item=S.sel, type=S.type, name='', detail='', price=0;
+  if(type==='flights'){
+    name=item.airline+' · '+item.from+' → '+item.to;
+    detail='Duration: '+item.duration;
+    price=item.price;
+  } else {
+    var nights=Math.max(1,Math.round((new Date(S.searchParams.co)-new Date(S.searchParams.ci))/(1000*60*60*24)));
+    name=item.name;
+    detail=item.location+' · '+nights+' nights';
+    price=Math.round(item.price*nights*PAX.hr*1.12);
+  }
+  document.getElementById('o-item').innerHTML='<div class="oi-name">'+name+'</div><div class="oi-det">'+detail+'</div>';
+  var tax=Math.round(price*.12);
+  document.getElementById('o-rows').innerHTML=
+    '<div class="or"><span class="ol">Subtotal</span><span>$'+(price-tax)+'</span></div>'+
+    '<div class="or"><span class="ol">Taxes & fees</span><span>$'+tax+'</span></div>'+
+    '<div class="or tot"><span>Total due</span><span>$'+price+'</span></div>';
+  document.getElementById('pax-card').style.display='block';
+  document.getElementById('pay-card').style.display='none';
+  document.getElementById('cs3').className='costep active';
+  document.getElementById('cs4').className='costep';
+  showPage('p-chk');
+}
+function goPay(){
+  var fn=document.getElementById('pf').value.trim();
+  var em=document.getElementById('pe').value.trim();
+  if(!fn){alert('Please enter your first name.');return;}
+  if(!em){alert('Please enter your email.');return;}
+  document.getElementById('cn').value=fn+' '+document.getElementById('pl').value;
+  document.getElementById('pax-card').style.display='none';
+  document.getElementById('pay-card').style.display='block';
+  document.getElementById('cs3').className='costep done';
+  document.getElementById('cs4').className='costep active';
+  window.scrollTo(0,0);
+}
+function procPay(){
+  var n=document.getElementById('cnum').value.replace(/\s/g,'');
+  var e=document.getElementById('cexp').value.replace(/\s/g,'');
+  var cv=document.getElementById('ccvv').value;
+  if(n.length<15){alert('Please enter a valid card number.');return;}
+  if(!e.match(/^\d{2}\/\d{2}$/)){alert('Please enter expiry as MM/YY.');return;}
+  if(cv.length<3){alert('Please enter your security code.');return;}
+  var btn=document.getElementById('pay-btn');
+  btn.textContent='Processing...';btn.disabled=true;btn.style.background='#9ca3af';
+  setTimeout(function(){
+    var ref='TOD-'+Math.random().toString(36).toUpperCase().substr(2,6);
+    document.getElementById('cf-ref').textContent=ref;
+    document.getElementById('cf-email').textContent=document.getElementById('pe').value;
+    var rows='';
+    if(S.type==='flights'){
+      var f=S.sel;
+      rows='<div class="cdr"><span class="cl">Flight</span><span class="cv">'+f.airline+'</span></div>'+
+        '<div class="cdr"><span class="cl">Route</span><span class="cv">'+f.from+' → '+f.to+'</span></div>'+
+        '<div class="cdr"><span class="cl">Departure</span><span class="cv">'+f.dep+' · '+f.depDate+'</span></div>'+
+        '<div class="cdr"><span class="cl">Price paid</span><span class="cv">'+f.priceFormatted+'</span></div>';
+    } else {
+      var h=S.sel;
+      rows='<div class="cdr"><span class="cl">Hotel</span><span class="cv">'+h.name+'</span></div>'+
+        '<div class="cdr"><span class="cl">Location</span><span class="cv">'+h.location+'</span></div>'+
+        '<div class="cdr"><span class="cl">Check-in</span><span class="cv">'+h.checkin+'</span></div>';
+    }
+    rows+='<div class="cdr"><span class="cl">Passenger</span><span class="cv">'+(document.getElementById('pf').value+' '+document.getElementById('pl').value).trim()+'</span></div>';
+    document.getElementById('cf-details').innerHTML=rows;
+    document.getElementById('cs4').className='costep done';
+    document.getElementById('cs5').className='costep active';
+    btn.textContent='Confirm & complete booking';btn.disabled=false;btn.style.background='';
+    showPage('p-cf');
+  },2500);
+}
+
+function setSP(el){document.querySelectorAll('.sort-pill').forEach(function(b){b.classList.remove('active');});el.classList.add('active');}
+function clearF(){document.querySelectorAll('.fpanel input[type=checkbox]').forEach(function(cb){cb.checked=true;});}
+function fcn(el){var v=el.value.replace(/\D/g,'').substr(0,16);el.value=v.replace(/(.{4})/g,'$1  ').trim();}
+function fce(el){var v=el.value.replace(/[^\d]/g,'');if(v.length>=2)v=v.substr(0,2)+'/'+v.substr(2,2);el.value=v;}
+function doSearch(){
+  var active=document.querySelector('#ltabs .se-tab.active');
+  var idx=Array.from(document.querySelectorAll('#ltabs .se-tab')).indexOf(active);
+  var types=['flights','hotels','packages','cars','tp'];
+  var type=types[idx]||'flights';
+  if(type==='flights')searchFlights();
+  else if(type==='hotels')searchHotels();
+  else if(type==='packages')searchPackages();
+  else if(type==='cars')searchCars();
+  else searchTP();
+}
+
+// Set min dates to today
+(function(){
+  var today=new Date().toISOString().split('T')[0];
+  ['f-dep','f-ret','h-ci','h-co','pk-dep','pk-ret','ow-dep'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.min=today;
+  });
+  // Default flight from
+  if(document.getElementById('f-from')) document.getElementById('f-from').value='Seattle (SEA)';
+  if(document.getElementById('ow-from')) document.getElementById('ow-from').value='Seattle (SEA)';
+})();
+</script>
+</body>
+</html>
